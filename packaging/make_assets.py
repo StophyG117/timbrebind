@@ -9,8 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from pedalclicker.app import make_icon  # noqa: E402
-from pedalclicker.config import APP_NAME, AUTHOR, LICENSE_NAME, VERSION  # noqa: E402
+from timbrebind.app import make_icon  # noqa: E402
+from timbrebind.config import APP_NAME, AUTHOR, LICENSE_NAME, VERSION  # noqa: E402
 
 OUT = ROOT / "packaging" / "build"
 OUT.mkdir(parents=True, exist_ok=True)
@@ -27,11 +27,11 @@ VSVersionInfo(
   kids=[
     StringFileInfo([StringTable('040904B0', [
       StringStruct('CompanyName', '{AUTHOR}'),
-      StringStruct('FileDescription', '{APP_NAME} - sustain pedal to mouse click'),
+      StringStruct('FileDescription', '{APP_NAME} - instrument sounds to computer control'),
       StringStruct('FileVersion', '{VERSION}'),
-      StringStruct('InternalName', 'PedalClicker'),
+      StringStruct('InternalName', 'Timbrebind'),
       StringStruct('LegalCopyright', 'Copyright (C) 2026 {AUTHOR}. {LICENSE_NAME}.'),
-      StringStruct('OriginalFilename', 'PedalClicker.exe'),
+      StringStruct('OriginalFilename', 'Timbrebind.exe'),
       StringStruct('ProductName', '{APP_NAME}'),
       StringStruct('ProductVersion', '{VERSION}')])]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])

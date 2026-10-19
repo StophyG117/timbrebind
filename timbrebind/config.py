@@ -1,7 +1,7 @@
-"""Settings: defaults, load/save to %APPDATA%\\PedalClicker (or a data folder
+"""Settings: defaults, load/save to %APPDATA%\\Timbrebind (or a data folder
 beside the exe in portable mode), validation."""
 
-# Pedal Clicker - sustain pedal to mouse click, via an audio input.
+# Timbrebind - turn any instrument into a controller.
 # Copyright (C) 2026 Christoph Glennon
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -15,8 +15,8 @@ import os
 import sys
 from pathlib import Path
 
-APP_NAME = "Pedal Clicker"
-APP_ID = "PedalClicker"
+APP_NAME = "Timbrebind"
+APP_ID = "Timbrebind"
 VERSION = "1.0.0"
 AUTHOR = "Christoph Glennon"
 LICENSE_NAME = "GNU GPL v3 or later"
@@ -29,7 +29,7 @@ PORTABLE = (APP_DIR / "portable").exists()
 DATA_DIR = (APP_DIR / "data" if PORTABLE
             else Path(os.environ.get("APPDATA", Path.home())) / APP_ID)
 SETTINGS_FILE = DATA_DIR / "settings.json"
-LOG_FILE = DATA_DIR / "pedal_clicker.log"
+LOG_FILE = DATA_DIR / "timbrebind.log"
 
 BUTTONS = ("left", "right", "middle")
 

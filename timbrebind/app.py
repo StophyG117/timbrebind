@@ -1,7 +1,7 @@
 """System-tray application: tray icon + menu, settings, monitor/calibration,
 help and about windows."""
 
-# Pedal Clicker - Copyright (C) 2026 Christoph Glennon
+# Timbrebind - Copyright (C) 2026 Christoph Glennon
 # Licensed under the GNU GPL v3 or later; see LICENSE.
 
 import ctypes
@@ -572,8 +572,9 @@ class SettingsWindow(Window):
 
 
 HELP_TEXT = f"""\
-{APP_NAME} turns a keyboard sustain pedal plugged into an audio interface input \
-into a mouse button.
+{APP_NAME} turns sounds from an audio interface input into computer control: \
+it learns the acoustic signature of a sound and binds it to an action. This \
+version ships the first preset: a keyboard sustain pedal as a mouse button.
 
 HOW IT WORKS
 A sustain pedal is just a switch on a 1/4" jack. It makes no sound, but the \
@@ -630,7 +631,7 @@ Run {APP_NAME} as administrator if you need that.
 in an isolated session and can't move or click the mouse on your desktop. \
 Use "Start with Windows" to launch it at sign-in.
 
-- Portable copy: a file named "portable" next to PedalClicker.exe keeps \
+- Portable copy: a file named "portable" next to Timbrebind.exe keeps \
 settings and the log in a "data" folder beside it, so the whole folder can live \
 on a USB stick.
 
@@ -673,7 +674,9 @@ class AboutWindow(Window):
         ttk.Label(f, text=APP_NAME, font=("Segoe UI", 16, "bold")).grid(row=0, column=1, sticky="w")
         ttk.Label(f, text=f"Version {VERSION}").grid(row=1, column=1, sticky="w")
         ttk.Label(f, text=f"Author: {AUTHOR}").grid(row=2, column=1, sticky="w")
-        ttk.Label(f, text="Sustain pedal to mouse click, via an audio input.",
+        ttk.Label(f, text="Turn any instrument into a controller.\n"
+                          "Preset: sustain pedal to mouse click.",
+                  justify="left",
                   foreground="#666").grid(row=3, column=1, sticky="w")
         ttk.Label(f, foreground="#666", justify="center", text=(
             f"Copyright © 2026 {AUTHOR}\n"
@@ -837,6 +840,24 @@ def _single_instance():
     return handle
 
 
+def _migrate_from_pedal_clicker():
+    """Pre-release builds were called Pedal Clicker: carry over their
+    calibration and swap their start-up entry for ours."""
+    old = Path(os.environ.get("APPDATA", Path.home())) / "PedalClicker" / "settings.json"
+    if not config.PORTABLE and old.exists() and not config.SETTINGS_FILE.exists():
+        config.SETTINGS_FILE.write_bytes(old.read_bytes())
+        log.info("migrated settings from %s", old)
+    try:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, RUN_KEY, 0,
+                            winreg.KEY_QUERY_VALUE | winreg.KEY_SET_VALUE) as k:
+            winreg.QueryValueEx(k, "PedalClicker")
+            winreg.DeleteValue(k, "PedalClicker")
+        set_startup(True)
+        log.info("replaced PedalClicker start-up entry")
+    except OSError:
+        pass
+
+
 def main():
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
@@ -855,5 +876,6 @@ def main():
         messagebox.showinfo(APP_NAME, f"{APP_NAME} is already running in the system tray.")
         return
     log.info("%s %s starting", APP_NAME, VERSION)
+    _migrate_from_pedal_clicker()
     App().run()
     log.info("exited")

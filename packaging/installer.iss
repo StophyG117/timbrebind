@@ -1,11 +1,11 @@
-; Inno Setup script for Pedal Clicker. Built by build.ps1, which passes
-; /DAppVersion=x.y.z from pedalclicker/config.py.
+; Inno Setup script for Timbrebind. Built by build.ps1, which passes
+; /DAppVersion=x.y.z from timbrebind/config.py.
 ;
-; Pedal Clicker - Copyright (C) 2026 Christoph Glennon
+; Timbrebind - Copyright (C) 2026 Christoph Glennon
 ; Licensed under the GNU GPL v3 or later.
 
-#define AppName "Pedal Clicker"
-#define AppExe "PedalClicker.exe"
+#define AppName "Timbrebind"
+#define AppExe "Timbrebind.exe"
 #ifndef AppVersion
   #define AppVersion "0.0.0"
 #endif
@@ -26,7 +26,7 @@ PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 LicenseFile=..\LICENSE
 OutputDir=..\release
-OutputBaseFilename=PedalClicker-{#AppVersion}-setup
+OutputBaseFilename=Timbrebind-{#AppVersion}-setup
 SetupIconFile=build\icon.ico
 UninstallDisplayIcon={app}\{#AppExe}
 UninstallDisplayName={#AppName}
@@ -47,7 +47,7 @@ Name: "startup"; Description: "Start {#AppName} when I sign in to Windows"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\dist\PedalClicker\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\Timbrebind\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#AppName}"; Filename: "{app}\{#AppExe}"
@@ -55,16 +55,16 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; Tasks: desktopico
 
 [Registry]
 ; Same value the app's own "Start with Windows" toggle writes.
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "PedalClicker"; ValueData: """{app}\{#AppExe}"""; Tasks: startup
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "Timbrebind"; ValueData: """{app}\{#AppExe}"""; Tasks: startup
 
 [Run]
 Filename: "{app}\{#AppExe}"; Description: "{cm:LaunchProgram,{#AppName}}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 const
-  AppMutexName = 'Local\PedalClicker-tray';  // held by the running tray app
+  AppMutexName = 'Local\Timbrebind-tray';  // held by the running tray app
 
-// Close a running Pedal Clicker. Interactive runs ask first; silent runs
+// Close a running Timbrebind. Interactive runs ask first; silent runs
 // just close it. Returns False if the user declined.
 function StopRunningApp(Silent: Boolean): Boolean;
 var
@@ -102,7 +102,7 @@ end;
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   // Remove the start-up entry whether the installer or the app created it.
-  // Settings in %APPDATA%\PedalClicker are kept for a later reinstall.
+  // Settings in %APPDATA%\Timbrebind are kept for a later reinstall.
   if CurUninstallStep = usPostUninstall then
-    RegDeleteValue(HKEY_CURRENT_USER, 'Software\Microsoft\Windows\CurrentVersion\Run', 'PedalClicker');
+    RegDeleteValue(HKEY_CURRENT_USER, 'Software\Microsoft\Windows\CurrentVersion\Run', 'Timbrebind');
 end;
